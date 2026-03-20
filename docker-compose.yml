@@ -28,30 +28,31 @@ services:
 
  backend:
   build:
-   context: ./backend
-   dockerfile: Dockerfile.dev
+    context: ./backend
+    dockerfile: Dockerfile.dev
   container_name: spring-back
   depends_on:
-   mysql:
-    condition: service_healthy
+    mysql:
+      condition: service_healthy
   environment:
-   SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-cruddb}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
-   SPRING_DATASOURCE_USERNAME: ${MYSQL_USER:-cruduser}
-   SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD:-crudpass}
-   GRADLE_USER_HOME: /root/.gradle
+    SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-cruddb}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+    SPRING_DATASOURCE_USERNAME: ${MYSQL_USER:-cruduser}
+    SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD:-crudpass}
+    GRADLE_USER_HOME: /root/.gradle
   ports:
-   - "8080:8080"
+    - "8080:8080"
   volumes:
-   - ./backend:/app
-   - gradle_cache:/root/.gradle
-   - /app/build
-   - /app/.gradle
+    # - ./backend:/app
+    - gradle_cache:/root/.gradle
+    - /app/build
+    - /app/.gradle
+  command: ["/bin/sh", "-c", "sed -i 's/\r$//' /app/gradlew && chmod +x /app/gradlew && /app/gradlew bootRun"]
   healthcheck:
-   test: ["CMD-SHELL", "curl -f http://localhost:8080/api/todos || exit 1"]
-   interval: 10s
-   timeout: 5s
-   retries: 10
-   start_period: 60s
+    test: ["CMD-SHELL", "curl -f http://localhost:8080/api/todos || exit 1"]
+    interval: 10s
+    timeout: 5s
+    retries: 10
+    start_period: 60s
 
  frontend:
   build:
