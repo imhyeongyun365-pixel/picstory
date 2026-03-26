@@ -1,8 +1,38 @@
 import React from 'react'
-
-const Input = () => {
+import "./Input.scss"
+const Input = ({
+  lable,  
+  type="text",
+  placeholder,
+  name,
+  value,
+  onChange,
+  onBlur,
+  error,
+  icon,
+  disabled=false,
+  className='',
+  ...props
+},ref) => {
   return (
-    <div>Input</div>
+    <div className='input-group'>
+      {lable && <lable className="input-lable">{lable}</lable>}
+      <div className="input-wrapper">
+        {icon && <span className='input-icon'>{icon}</span>}
+      <input 
+      type={type}
+      ref={ref}
+      name={name}
+      value={value}
+      onChange={onChange}
+      disabled={disabled}
+      placeholder={placeholder} 
+       className='input-field'
+       {...props}
+       />
+       </div>
+    {error && <p className='input-error'>{error}</p>}
+    </div>
   )
 }
 
